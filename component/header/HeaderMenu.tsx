@@ -1,80 +1,92 @@
 'use client'
-import logo from '@/public/logo/gt-logo.svg'
-import { Burger, Container } from '@mantine/core'
+import { Burger, Button, Container, Drawer, Group, Text, TextInput } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import Image from 'next/image'
-import Link from 'next/link'
+import { GoFileDirectory, GoPlus } from 'react-icons/go'
+import { IoSearch } from 'react-icons/io5'
+import { LuUsers } from 'react-icons/lu'
+import { TbUserSquare } from 'react-icons/tb'
+// import { MantineLogo } from '@mantinex/mantine-logo'
+import { useState } from 'react'
 import classes from './HeaderMenu.module.css'
 
 const links = [
-  { link: '/about', label: 'About' },
-  {
-    link: '#1',
-    label: 'Learn',
-  },
-  { link: '/about', label: 'About' },
-  {
-    link: '#2',
-    label: 'Support',
-  },
+  { link: '/about', label: 'View/Restock', icon: <GoFileDirectory size={20} /> },
+  { link: '/learn', label: 'Borrower', icon: <TbUserSquare size={20} /> },
+  { link: '/pricing', label: 'Users', icon: <LuUsers size={20} /> },
 ]
 
-export function HeaderMenu() {
+export function Header() {
   const [opened, { toggle }] = useDisclosure(false)
+  const [active, setActive] = useState(links[0].link)
+  const [openedModal, { open, close }] = useDisclosure(false)
 
-  // const items = links.map((link) => {
-  //   const menuItems = link.links?.map((item) => <Menu.Item key={item.link}>{item.label}</Menu.Item>)
-
-  //   if (menuItems) {
-  //     return (
-  //       <Menu key={link.label} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
-  //         <Menu.Target>
-  //           <a
-  //             href={link.link}
-  //             className={classes.link}
-  //             onClick={(event) => event.preventDefault()}
-  //           >
-  //             <Center>
-  //               <span className={classes.linkLabel}>{link.label}</span>
-  //               <MdOutlineKeyboardArrowDown />
-  //             </Center>
-  //           </a>
-  //         </Menu.Target>
-  //         <Menu.Dropdown>{menuItems}</Menu.Dropdown>
-  //       </Menu>
-  //     )
-  //   }
-
-  //   return (
-  //     <a
-  //       key={link.label}
-  //       href={link.link}
-  //       className={classes.link}
-  //       onClick={(event) => event.preventDefault()}
-  //     >
-  //       {link.label}
-  //     </a>
-  //   )
-  // })
+  const items = links.map((link) => (
+    <a
+      key={link.label}
+      href={link.link}
+      className={classes.link}
+      data-active={active === link.link || undefined}
+      onClick={(event) => {
+        event.preventDefault()
+        setActive(link.link)
+      }}
+    >
+      {link.icon} {link.label}
+    </a>
+  ))
 
   return (
     <header className={classes.header}>
-      <Container size="md">
-        <div className={classes.inner}>
-          {/* <MantineLogo size={28} /> */}
-          <p className="text-xl font-bold">
-            <Link href="/">
-              <Image alt="GT-Logo" src={logo} width={150} height={200} />
-            </Link>
-          </p>
-          {/* <Group gap={5} visibleFrom="sm">
+      <Container size="md" className={classes.inner}>
+        {' '}
+        <Text fw={600} c="white" size="xl">
+          {' '}
+          StockMate
+        </Text>
+        <Group className="-ml-10" justify="space-between">
+          <Group gap={10} visibleFrom="xs">
             {items}
-          </Group> */}
-          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
-        </div>
+          </Group>
+          <Button bg="white" c="black">
+            Log Out
+          </Button>
+          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+        </Group>
       </Container>
+      <Group mt={30} className="w-[80%]" justify="space-evenly">
+        <Text c="white" size="xl" fw={600}>
+          View/Restock
+        </Text>
+        <Group>
+          <TextInput
+            styles={{ root: { color: 'white' } }}
+            classNames={classes}
+            variant="filled"
+            leftSectionPointerEvents="none"
+            leftSection={<IoSearch color="white" />}
+            placeholder="Search"
+          />
+          <Button
+            onClick={open}
+            radius="md"
+            leftSection={<GoPlus size={20} />}
+            bg="white"
+            c="#CF5C2D"
+          >
+            Add
+          </Button>
+        </Group>
+      </Group>
+      <Drawer
+        // styles={{ title: { textAlign: 'center' } }}
+        position="right"
+        opened={openedModal}
+        onClose={close}
+        // title="Authentication"
+      >
+        <h1 className="text-center font-semibold">Add Item</h1>
+        {/* Drawer content */}
+      </Drawer>
     </header>
   )
 }
-
-export default HeaderMenu

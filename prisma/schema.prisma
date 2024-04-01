@@ -12,34 +12,15 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- enum updateType {
-  firmware
-  fileSystem
+ enum role {
+  user
+  admin
 }
-model project {
-  id  Int        @id @default(autoincrement())
-  name String
-  description String?
-  device   device[]
-
-
-  @@index([id])
-}
-model device {
-  id String     @id @default(cuid())
-  name String?
-  isUpdated Boolean @default(false)
-  projectId Int
-  project  project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  files  binaryFile[]
-}
-model binaryFile {
-  id Int        @id @default(autoincrement())
-  updateType updateType
-  fileLink   String
-  isLatest   Boolean @default(true)
-  deviceId String
-  device   device  @relation(fields: [deviceId],references: [id],onDelete: Cascade)
-  createdAt  DateTime @default(now())
-  @@index([id])
+model user {
+  id         String @id @default(cuid())
+  username   String  @unique
+  email      String? @unique
+  password   String  
+  role       role   @default(user)
+@@index([id])
 }
