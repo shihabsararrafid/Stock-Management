@@ -1,6 +1,5 @@
 'use client'
 import LoaderComponent from '@/component/Loader/LoaderComponent'
-import ButtonComp from '@/component/button/ButtonComp'
 import CardComp from '@/component/card/CardComp'
 import { projectType } from '@/types/project'
 import { useEffect, useState } from 'react'
@@ -44,14 +43,6 @@ const Homepage = () => {
   }
   return (
     <div>
-      <section>
-        <div className="flex justify-between">
-          <p className="text-5xl font-bold">Welcome to Firmware Update website</p>
-          <div className="w-fit">
-            <ButtonComp btnLabel="Add New Project" btnColor="black" btnLink={`/add-project`} />
-          </div>
-        </div>
-      </section>
       <section className="my-4">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4 lg:gap-12">
           {/* change projectData to data*/}

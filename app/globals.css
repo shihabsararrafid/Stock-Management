@@ -6,12 +6,11 @@
   @tailwind base;
 }
 
-td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 @layer tailwind_components_utilities {
   @tailwind components;
   @tailwind utilities;
+}
+td {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

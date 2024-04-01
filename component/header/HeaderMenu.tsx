@@ -7,6 +7,7 @@ import { LuUsers } from 'react-icons/lu'
 import { TbUserSquare } from 'react-icons/tb'
 // import { MantineLogo } from '@mantinex/mantine-logo'
 import { useState } from 'react'
+import AddItemForm from './AddItemDrwaer'
 import classes from './HeaderMenu.module.css'
 
 const links = [
@@ -84,7 +85,10 @@ export function Header() {
         onClose={close}
         // title="Authentication"
       >
-        <h1 className="text-center font-semibold">Add Item</h1>
+        <h1 style={{ textAlign: 'center', fontWeight: 600 }} className="text-center font-semibold">
+          Add Item
+        </h1>
+        <AddItemForm />
         {/* Drawer content */}
       </Drawer>
     </header>

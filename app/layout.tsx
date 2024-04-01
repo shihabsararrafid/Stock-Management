@@ -1,6 +1,5 @@
-import Auth from '@/component/auth/auth'
 // import HeaderMenu from '@/component/header/HeaderMenu'
-import { Header } from '@/component/header/HeaderMenu'
+import { LayoutProvider } from '@/component/Layout/LayoutProvider'
 import { Providers } from '@/component/provider/Provider'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -17,12 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <Header />
-          <div className="container mx-auto">
-            <main>
-              <Auth>{children}</Auth>
-            </main>
-          </div>
+          <LayoutProvider>{children}</LayoutProvider>
         </Providers>
       </body>
     </html>
