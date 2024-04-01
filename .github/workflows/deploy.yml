@@ -1,0 +1,45 @@
+on:
+  push:
+    branches: ['main', 'rafid']
+name: Publish Website
+jobs:
+  web-deploy:
+    name: 🚀 Deploy Website Every Commit
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+    env:
+      SSH_KEY: ${{secrets.SSH_KEY}}
+    steps:
+      - name: 🚚 Get Latest Code
+        uses: actions/checkout@v4
+
+      - name: 📦 Install Packages
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+         
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: 🔨 Build
+        run: pnpm run build
+
+      - name: ⚙️ Configure SSH Key
+        run: mkdir -p ~/.ssh
+      - run: echo "$SSH_KEY" >> ~/.ssh/github-action
+      - run: chmod 400 ~/.ssh/github-action
+      - run: echo -e "Host vps\n\tUser  ${{secrets.SSH_USERNAME}}\n\tHostname  ${{secrets.SSH_HOST}}\n\tIdentityFile ~/.ssh/github-action\n\tStrictHostKeyChecking No" >> ~/.ssh/config
+
+      - name: Extract branch name
+        shell: bash
+        run: |
+          echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" \
+          | sed -r 's/^branch=vps$/branch=www/g' \
+          >> "$GITHUB_ENV"
+
+      - name: 📂 Sync Files
+        run: rsync -re ssh ./ vps:/root/firmware.gizantech.com --exclude .git/ --filter=':- .gitignore'
+      - run: rsync -re ssh ./.next/ vps:/root/firmware.gizantech.com/.next
+      - run: ssh vps "cd firmware.gizantech.com && ./deploy.sh"

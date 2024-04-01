@@ -1,0 +1,17 @@
+@layer tailwind_base, mantine, tailwind_components_utilities;
+@import '@mantine/core/styles.css' layer(mantine);
+@import '@mantine/dates/styles.css' layer(mantine);
+
+@layer tailwind_base {
+  @tailwind base;
+}
+
+td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@layer tailwind_components_utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
