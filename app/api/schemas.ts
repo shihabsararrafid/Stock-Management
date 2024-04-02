@@ -24,7 +24,7 @@ export const fileUploadSchema = zfd.formData({
   file: zfd.file(),
 })
 export const loginSchema = z.object({
-  email: z.string().email(),
+  username: z.string(),
   password: z.string(),
 })
 export const userCreateSchema = z.object({

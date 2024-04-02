@@ -1,5 +1,7 @@
 import { signToken } from '@/lib/jwtutils'
+import prisma from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
+import bcrypt from 'bcrypt'
 import { serialize } from 'cookie'
 import { NextRequest, NextResponse } from 'next/server' // Import NextResponse
 import { ZodError } from 'zod'
@@ -8,7 +10,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const sessionData = await new Response(req.body).json()
     const data = loginSchema.parse(sessionData)
-    if (data.email === 'admin@gizantech.com' && data.password === '#Analysis23') {
+    const user = await prisma.user.findUnique({ where: { username: data.username } })
+    if (user) {
+      const check = await bcrypt.compare(data.password, user.password)
+      if (!check) throw new Error('Unauthorized')
       const encryptedSessionData = await signToken(data)
       console.log(encryptedSessionData, 'data')
       const cookie = serialize('session', encryptedSessionData as unknown as string, {

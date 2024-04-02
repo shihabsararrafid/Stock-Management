@@ -6,7 +6,9 @@ import { IoSearch } from 'react-icons/io5'
 import { LuUsers } from 'react-icons/lu'
 import { TbUserSquare } from 'react-icons/tb'
 // import { MantineLogo } from '@mantinex/mantine-logo'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import Swal from 'sweetalert2'
 import AddItemForm from './AddItemDrwaer'
 import classes from './HeaderMenu.module.css'
 
@@ -20,7 +22,8 @@ export function Header() {
   const [opened, { toggle }] = useDisclosure(false)
   const [active, setActive] = useState(links[0].link)
   const [openedModal, { open, close }] = useDisclosure(false)
-
+  const [isLoading, setLoading] = useState(false)
+  const route = useRouter()
   const items = links.map((link) => (
     <a
       key={link.label}
@@ -35,6 +38,30 @@ export function Header() {
       {link.icon} {link.label}
     </a>
   ))
+  const handleLogout = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/auth/logout', {
+        method: 'POST',
+        // body: JSON.stringify(form.values),
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      if (res.ok) {
+        await Swal.fire('Success', 'Log Out Successfully', 'success')
+        route.push('/auth/login')
+      } else throw new Error('Invalid Server Response')
+    } catch (error) {
+      await Swal.fire(
+        'Error',
+        error instanceof Error ? error.message : 'Invalid Server Response',
+        'error',
+      )
+      setLoading(false)
+    }
+  }
 
   return (
     <header className={classes.header}>
@@ -48,7 +75,7 @@ export function Header() {
           <Group gap={10} visibleFrom="xs">
             {items}
           </Group>
-          <Button bg="white" c="black">
+          <Button loading={isLoading} onClick={handleLogout} bg="white" c="black">
             Log Out
           </Button>
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
