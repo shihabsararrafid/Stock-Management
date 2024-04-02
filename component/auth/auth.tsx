@@ -12,7 +12,7 @@ const Auth = ({ children }: { children: ReactNode }) => {
         })
         if (!response.ok) throw new Error('Invalid User')
       } catch (error) {
-        route.push('/login')
+        route.push('/auth/login')
       }
     }
     load()

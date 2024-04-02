@@ -21,6 +21,7 @@ model user {
   username   String  @unique
   email      String? @unique
   password   String  
+  image      String?
   role       role   @default(user)
-@@index([id])
+  @@index([id])
 }

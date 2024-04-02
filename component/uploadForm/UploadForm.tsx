@@ -18,8 +18,11 @@ const UploadForm = ({ id, open, close }: { id?: string; open: Function; close: F
     try {
       const response = await fetch(`/api/device/${id}/file-upload`, {
         method: 'POST',
-
         body: data,
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
       })
       if (response.ok) {
         // window.location.reload()
