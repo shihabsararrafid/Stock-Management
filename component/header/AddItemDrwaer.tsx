@@ -4,19 +4,17 @@ import { PutBlobResult } from '@vercel/blob'
 import { useState } from 'react'
 import { FaRegFileImage } from 'react-icons/fa'
 import Swal from 'sweetalert2'
+import { useSWRConfig } from 'swr'
 
 export default function AddItemForm({ close }: { close: () => void }) {
   const [isImageUploading, setImageUploading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [key, setKey] = useState(1000)
-  // const []
+  const { mutate } = useSWRConfig()
   const form = useForm({
     initialValues: { name: '', photoUrl: '', stock: 0 },
-    // functions will be used to validate values at corresponding key
     validate: {
       name: (value) => (value.length < 2 ? 'Name must have at least 2 letters' : null),
-
-      // email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
       photoUrl: (value) => (!value ? 'Image is required' : null),
     },
   })
@@ -37,12 +35,12 @@ export default function AddItemForm({ close }: { close: () => void }) {
               body: JSON.stringify(form.values),
               headers: {
                 'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
               },
             })
             if (res.ok) {
               await Swal.fire('Success', 'Product Added', 'success')
               setKey(key + 1)
+              mutate('/api/product')
               form.reset()
             } else {
               const data = await res.json()
@@ -79,7 +77,6 @@ export default function AddItemForm({ close }: { close: () => void }) {
         <FileInput
           mt="lg"
           onChange={async (event) => {
-            // console.log(event)
             if (!event) {
               form.setFieldValue('photoUrl', '')
               return
@@ -99,8 +96,6 @@ export default function AddItemForm({ close }: { close: () => void }) {
             } finally {
               setImageUploading(false)
             }
-
-            // console.log(newBlob, 'result')
           }}
           clearable
           name="photoUrl"

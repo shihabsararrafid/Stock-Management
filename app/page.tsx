@@ -1,30 +1,11 @@
 'use client'
 import LoaderComponent from '@/component/Loader/LoaderComponent'
-import CardComp from '@/component/card/CardComp'
-import { projectType } from '@/types/project'
-import { useState } from 'react'
-
-const projectData = [
-  {
-    id: 1,
-    title: 'Gizantech',
-    desc: 'Website firmware',
-  },
-  {
-    id: 2,
-    title: 'Jason',
-    desc: 'Jason website firmware',
-  },
-  {
-    id: 3,
-    title: 'Smith',
-    desc: 'Smith device Firmware',
-  },
-]
+import ProductCard from '@/component/product/productCard'
+import { useProducts } from './hooks/useProductHook'
 
 const Homepage = () => {
-  const [data, setData] = useState<projectType[] | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const { products, isError, mutate, isLoading } = useProducts()
+  // console.log(data)
   const url = ''
 
   if (isLoading) {
@@ -32,10 +13,11 @@ const Homepage = () => {
   }
   return (
     <div>
-      <section className="my-4">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4 lg:gap-12">
+      <section className="my-4 flex w-full justify-center ">
+        <div className="grid w-full grid-cols-1 gap-8 px-5 sm:grid-cols-2  lg:w-[80%] lg:grid-cols-3 lg:gap-12 xl:grid-cols-4">
           {/* change projectData to data*/}
-          {data?.map((item) => (
+          {products?.map((d) => <ProductCard product={d} key={d.id} />)}
+          {/* {data?.map((item) => (
             <CardComp
               key={item.id}
               title={item.name}
@@ -43,7 +25,7 @@ const Homepage = () => {
               btnLabel="Details"
               link={`/${encodeURIComponent(item.id)}`}
             />
-          ))}
+          ))} */}
         </div>
       </section>
     </div>
