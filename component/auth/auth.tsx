@@ -1,9 +1,10 @@
 'use client'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect } from 'react'
 
 const Auth = ({ children }: { children: ReactNode }) => {
   const route = useRouter()
+  const pathName = usePathname()
   useEffect(() => {
     const load = async () => {
       try {
@@ -12,7 +13,7 @@ const Auth = ({ children }: { children: ReactNode }) => {
         })
         if (!response.ok) throw new Error('Invalid User')
       } catch (error) {
-        route.push('/auth/login')
+        if (!pathName.startsWith('/auth')) route.push('/auth/login')
       }
     }
     load()

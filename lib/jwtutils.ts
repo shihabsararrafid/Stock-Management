@@ -73,15 +73,21 @@ const alg = 'RS256'
 const jwtConfig = {
   secret: new TextEncoder().encode(publicKey),
 }
+interface payloadType {
+  id: string
+  email: string
+  username: string
+  role: string
+}
 // Make a token
-export const signToken = async (payload: object) => {
+export const signToken = async (payload: object, expiryDate?: string) => {
   console.log()
   try {
     const privateK = await jose.importPKCS8(privateKey, alg)
     const jwt = await new jose.SignJWT({ ...payload })
       .setProtectedHeader({ alg })
       .setIssuedAt()
-      .setExpirationTime('7days')
+      .setExpirationTime(expiryDate ? expiryDate : '7days')
       .sign(privateK)
     // Return Promise
     return jwt
@@ -92,15 +98,15 @@ export const signToken = async (payload: object) => {
   }
 }
 // Verify Token
-export const verifyToken = async (token: string) => {
+export const verifyToken = async (token: string): Promise<payloadType> => {
   // Return Promise
   const publicK = await jose.importSPKI(publicKey, alg)
   try {
     const { payload, protectedHeader } = await jose.jwtVerify(token, publicK)
-    return payload
+    return payload as unknown as payloadType
   } catch (error) {
-    return error
-    // throw new Error((error as Error).message)
+    // return error
+    throw new Error((error as Error).message)
     // console.log(error)
   }
   //   console.log(payload)

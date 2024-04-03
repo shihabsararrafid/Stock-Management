@@ -12,9 +12,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const data = loginSchema.parse(sessionData)
     const user = await prisma.user.findUnique({ where: { username: data.username } })
     if (user) {
+      const { password, image, ...others } = user
       const check = await bcrypt.compare(data.password, user.password)
       if (!check) throw new Error('Unauthorized')
-      const encryptedSessionData = await signToken(data)
+      const encryptedSessionData = await signToken(others)
       console.log(encryptedSessionData, 'data')
       const cookie = serialize('session', encryptedSessionData as unknown as string, {
         httpOnly: true,

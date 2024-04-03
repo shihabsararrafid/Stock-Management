@@ -1,57 +1,54 @@
 'use client'
-import {
-  Anchor,
-  Box,
-  Button,
-  Center,
-  Container,
-  Group,
-  Paper,
-  Text,
-  TextInput,
-  Title,
-  rem,
-} from '@mantine/core'
+import { Button, Container, Group, Paper, PasswordInput, Text, Title } from '@mantine/core'
 //   import { IconArrowLeft } from '@tabler/icons-react';
 import { useForm } from '@mantine/form'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
-import { LuArrowLeft } from 'react-icons/lu'
 import Swal from 'sweetalert2'
 import classes from './style.module.css'
 
 export default function ForgotPassword() {
   const [loading, setLoading] = useState(false)
+  const searchParams = useSearchParams()
   const router = useRouter()
   const form = useForm({
-    initialValues: { email: '' },
+    initialValues: { password: '' },
+    validateInputOnChange: true,
+    validate: {
+      password: (value) => (value?.length < 6 ? 'Password must be at least 6 character' : null),
+    },
   })
   return (
     <div className="flex h-screen items-center justify-center">
       <Container size={460} my={30}>
         <Title className={classes.title} ta="center">
-          Forgot your password?
+          Reset your password
         </Title>
         <Text c="dimmed" fz="sm" ta="center">
-          Enter your email to get a reset link
+          Enter your new password
         </Text>
         <form
           onSubmit={async (event) => {
             event.preventDefault()
             // if (form.errors) returns
             setLoading(true)
+            const token = searchParams.get('token')
+            if (!token) {
+              await Swal.fire('Error', 'Token is required', 'error')
+              setLoading(false)
+              return
+            }
             try {
-              const res = await fetch('/api/auth/forgot-password', {
+              const res = await fetch('/api/auth/reset-password', {
                 method: 'POST',
-                body: JSON.stringify(form.values),
+                body: JSON.stringify({ ...form.values, token }),
                 headers: {
                   'Content-Type': 'application/json',
                   // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
               })
               if (res.ok) {
-                await Swal.fire('Success', 'Check Your Email Inbox', 'success')
+                await Swal.fire('Success', 'Password Reset Successfully', 'success')
                 router.push('/auth/login')
               } else {
                 const data = await res.json()
@@ -67,21 +64,16 @@ export default function ForgotPassword() {
           }}
         >
           <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
-            <TextInput
-              {...form.getInputProps('email')}
-              label="Your email"
-              placeholder="me@domain.com"
+            <PasswordInput
+              name="password"
+              my={10}
+              label="Password"
+              placeholder="Your password"
               required
+              mt="md"
+              {...form.getInputProps('password')}
             />
             <Group justify="space-between" mt="lg" className={classes.controls}>
-              <Anchor c="dimmed" size="sm" className={classes.control}>
-                <Center inline>
-                  <LuArrowLeft style={{ width: rem(12), height: rem(12) }} />
-                  <Box component={Link} href={'/auth/login'} ml={5}>
-                    Back to the login page
-                  </Box>
-                </Center>
-              </Anchor>
               <Button loading={loading} type="submit" bg="#D85722" className={classes.control}>
                 Reset password
               </Button>
