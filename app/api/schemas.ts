@@ -32,3 +32,8 @@ export const userCreateSchema = z.object({
   username: z.string(),
   password: z.string(),
 })
+export const productUploadSchema = z.object({
+  name: z.string(),
+  stock: z.number(),
+  photoUrl: z.string(),
+})

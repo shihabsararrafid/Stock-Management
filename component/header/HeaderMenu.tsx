@@ -115,7 +115,7 @@ export function Header() {
         <h1 style={{ textAlign: 'center', fontWeight: 600 }} className="text-center font-semibold">
           Add Item
         </h1>
-        <AddItemForm />
+        <AddItemForm close={close} />
         {/* Drawer content */}
       </Drawer>
     </header>

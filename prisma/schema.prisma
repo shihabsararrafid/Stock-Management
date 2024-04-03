@@ -30,7 +30,7 @@ model product{
   id String @id @default(cuid())
   name String
   photoUrl String
-  stock     BigInt
+  stock     Int
   borrowlist borrowList[]
   @@index([id])
 }
@@ -38,7 +38,7 @@ model borrowList {
   id    String @id @default(cuid())
   userId   String
   user user @relation(fields:  [userId],references:  [id],onDelete: Cascade)
-  value BigInt
+  value Int
   productId  String
   product product @relation(fields: [productId],references: [id],onDelete: Cascade)
   @@index([id,userId])

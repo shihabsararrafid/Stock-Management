@@ -2,8 +2,7 @@
 import LoaderComponent from '@/component/Loader/LoaderComponent'
 import CardComp from '@/component/card/CardComp'
 import { projectType } from '@/types/project'
-import { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
+import { useState } from 'react'
 
 const projectData = [
   {
@@ -28,16 +27,6 @@ const Homepage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const url = ''
 
-  useEffect(() => {
-    setIsLoading(true)
-    fetch('/api/project', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data: any) => {
-        setData(data.data as projectType[])
-      })
-      .catch((error) => Swal.fire('Error', 'Invalid Server Response', 'error'))
-      .finally(() => setIsLoading(false))
-  }, [])
   if (isLoading) {
     return <LoaderComponent />
   }
