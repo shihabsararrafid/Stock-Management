@@ -1,7 +1,8 @@
 import { IProduct } from '@/app/hooks/useProductHook'
-import { ActionIcon, Card, Group, Image, Menu, Modal, Text, rem } from '@mantine/core'
+import { ActionIcon, Box, Card, Group, Image, Menu, Modal, Text, rem } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDots, IconPencil, IconTrash } from '@tabler/icons-react'
+import Link from 'next/link'
 import Swal from 'sweetalert2'
 import { useSWRConfig } from 'swr'
 import AddItemForm from '../header/AddItemDrwaer'
@@ -62,10 +63,12 @@ export default function ProductCard({ product }: { product: IProduct }) {
           alt={`${product.name} Image`}
         />
       </Card.Section>
-      <Text span fw={700} inherit c="black">
-        {product.name}
-      </Text>{' '}
-      <Text>{product.stock}</Text>
+      <Box component={Link} href={`/products/${product.id}?name=${product.name}`}>
+        <Text span fw={700} inherit c="black">
+          {product.name}
+        </Text>{' '}
+        <Text>{product.stock}</Text>
+      </Box>
       <Modal
         centered
         size="xl"

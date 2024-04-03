@@ -6,7 +6,8 @@ import { IoSearch } from 'react-icons/io5'
 import { LuUsers } from 'react-icons/lu'
 import { TbUserSquare } from 'react-icons/tb'
 // import { MantineLogo } from '@mantinex/mantine-logo'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal from 'sweetalert2'
 import AddItemForm from './AddItemDrwaer'
@@ -24,6 +25,7 @@ export function Header() {
   const [openedModal, { open, close }] = useDisclosure(false)
   const [isLoading, setLoading] = useState(false)
   const route = useRouter()
+  const pathName = usePathname()
   const items = links.map((link) => (
     <a
       key={link.label}
@@ -67,7 +69,7 @@ export function Header() {
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
         {' '}
-        <Text fw={600} c="white" size="xl">
+        <Text component={Link} href={`/`} fw={600} c="white" size="xl">
           {' '}
           StockMate
         </Text>
@@ -81,30 +83,32 @@ export function Header() {
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
         </Group>
       </Container>
-      <Group mt={30} className="w-[80%]" justify="space-evenly">
-        <Text c="white" size="xl" fw={600}>
-          View/Restock
-        </Text>
-        <Group>
-          <TextInput
-            styles={{ root: { color: 'white' } }}
-            classNames={classes}
-            variant="filled"
-            leftSectionPointerEvents="none"
-            leftSection={<IoSearch color="white" />}
-            placeholder="Search"
-          />
-          <Button
-            onClick={open}
-            radius="md"
-            leftSection={<GoPlus size={20} />}
-            bg="white"
-            c="#CF5C2D"
-          >
-            Add
-          </Button>
+      {!pathName.startsWith('/products') && (
+        <Group mt={30} className="w-[80%]" justify="space-evenly">
+          <Text c="white" size="xl" fw={600}>
+            View/Restock
+          </Text>
+          <Group>
+            <TextInput
+              styles={{ root: { color: 'white' } }}
+              classNames={classes}
+              variant="filled"
+              leftSectionPointerEvents="none"
+              leftSection={<IoSearch color="white" />}
+              placeholder="Search"
+            />
+            <Button
+              onClick={open}
+              radius="md"
+              leftSection={<GoPlus size={20} />}
+              bg="white"
+              c="#CF5C2D"
+            >
+              Add
+            </Button>
+          </Group>
         </Group>
-      </Group>
+      )}
       <Drawer
         // styles={{ title: { textAlign: 'center' } }}
         position="right"

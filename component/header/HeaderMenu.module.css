@@ -2,7 +2,7 @@
   height: fit-content;
   padding: 20px 0;
   /* margin: 0 auto; */
-  margin-bottom: rem(120px);
+
   background-color: #d85722;
   border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }

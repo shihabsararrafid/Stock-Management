@@ -1,5 +1,17 @@
-import { Box, Button, FileInput, Group, Loader, NumberInput, Space, TextInput } from '@mantine/core'
+import {
+  Box,
+  Button,
+  FileInput,
+  Group,
+  Loader,
+  NumberInput,
+  Space,
+  TextInput,
+  rem,
+} from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { modals } from '@mantine/modals'
+import { IconXboxX } from '@tabler/icons-react'
 import { PutBlobResult } from '@vercel/blob'
 import { useState } from 'react'
 import { FaRegFileImage } from 'react-icons/fa'
@@ -19,6 +31,7 @@ export default function AddItemForm({
 }) {
   const [isImageUploading, setImageUploading] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [showPreview, setShowPreview] = useState(initialValues ? true : false)
   const [key, setKey] = useState(1000)
   const { mutate } = useSWRConfig()
   const form = useForm({
@@ -88,42 +101,82 @@ export default function AddItemForm({
           min={0}
           {...form.getInputProps('stock')}
         />
-        <FileInput
-          mt="lg"
-          onChange={async (event) => {
-            if (!event) {
-              form.setFieldValue('photoUrl', '')
-              return
+        {!showPreview && (
+          <FileInput
+            mt="lg"
+            onChange={async (event) => {
+              if (!event) {
+                form.setFieldValue('photoUrl', '')
+                return
+              }
+              setImageUploading(true)
+              try {
+                const response = await fetch(`/api/image/upload?filename=${event?.name}`, {
+                  method: 'POST',
+                  body: event,
+                })
+                const newBlob = (await response.json()) as PutBlobResult
+                if (response.ok) {
+                  form.setFieldValue('photoUrl', newBlob.url)
+                } else throw new Error('Invalid Server Response')
+              } catch (error) {
+                await Swal.fire('Error', 'Unable to upload image', 'error')
+              } finally {
+                setImageUploading(false)
+              }
+            }}
+            clearable
+            // value={initialValues?.photoUrl}
+            name="photoUrl"
+            leftSection={<FaRegFileImage size={20} />}
+            rightSection={isImageUploading ? <Loader size={20} /> : undefined}
+            label="Image"
+            accept="image/*"
+            description=" "
+            variant="filled"
+            placeholder="Upload Image"
+            required
+            leftSectionPointerEvents="none"
+          />
+        )}
+        {showPreview && (
+          <TextInput
+            variant="filled"
+            label="Image"
+            withAsterisk
+            description=" "
+            leftSection={
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                style={{ width: rem(22), height: rem(22) }}
+                alt="Initial Image"
+                src={initialValues?.photoUrl}
+              ></img>
             }
-            setImageUploading(true)
-            try {
-              const response = await fetch(`/api/image/upload?filename=${event?.name}`, {
-                method: 'POST',
-                body: event,
-              })
-              const newBlob = (await response.json()) as PutBlobResult
-              if (response.ok) {
-                form.setFieldValue('photoUrl', newBlob.url)
-              } else throw new Error('Invalid Server Response')
-            } catch (error) {
-              await Swal.fire('Error', 'Unable to upload image', 'error')
-            } finally {
-              setImageUploading(false)
+            rightSection={
+              <IconXboxX
+                onClick={() => {
+                  // console.log(form.v);
+                  modals.openConfirmModal({
+                    title: 'Delete',
+                    centered: true,
+                    children: (
+                      <>
+                        <span className="d-block h4">Are you sure to remove image?</span>
+                      </>
+                    ),
+                    labels: { confirm: 'Delete', cancel: 'Cancel' },
+                    onConfirm: () => {
+                      form.setFieldValue('photoUrl', '')
+                      setShowPreview(false)
+                    },
+                  })
+                }}
+                size={20}
+              />
             }
-          }}
-          clearable
-          // value={initialValues?.photoUrl}
-          name="photoUrl"
-          leftSection={<FaRegFileImage size={20} />}
-          rightSection={isImageUploading ? <Loader size={20} /> : undefined}
-          label="Image"
-          accept="image/*"
-          description=" "
-          variant="filled"
-          placeholder="Upload Image"
-          required
-          leftSectionPointerEvents="none"
-        />
+          ></TextInput>
+        )}
         <Space h={200} />
         <Group style={{ position: 'absolute', bottom: 15 }}>
           <Button
