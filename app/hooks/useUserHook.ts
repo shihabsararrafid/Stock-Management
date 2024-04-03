@@ -31,7 +31,7 @@ export function useUsers() {
     mutate,
   }
 }
-export function useProduct(id: string) {
+export function useUser(id: string) {
   const { data, error, isLoading, mutate } = useSWR(`/api/user/${id}`, singleUserFetcher)
 
   return {

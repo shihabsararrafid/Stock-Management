@@ -14,11 +14,33 @@ import {
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDots, IconPencil, IconTrash } from '@tabler/icons-react'
-import { mutate } from 'swr'
+import Link from 'next/link'
+import Swal from 'sweetalert2'
+import { useSWRConfig } from 'swr'
 import UserCreateForm from './userForm'
 
 const UserRow = ({ user }: { user: IUser }) => {
+  const { mutate } = useSWRConfig()
   const [openedModal, { open, close }] = useDisclosure(false)
+  const deleteUser = async () => {
+    try {
+      const res = await fetch(`/api/user/${user.id}`, {
+        method: 'DELETE',
+      })
+      if (res.ok) {
+        await Swal.fire('Success', 'User Deleted', 'success')
+
+        mutate('/api/user')
+      } else {
+        const data = await res.json()
+
+        throw new Error(data instanceof Error ? data.message : 'Invalid Server Response')
+      }
+    } catch (error) {
+      await Swal.fire('Error', 'Invalid Server Response', 'error')
+    } finally {
+    }
+  }
   return (
     <div className="cursor-pointer hover:bg-gray-200">
       <Group my={10} justify="space-between">
@@ -26,10 +48,12 @@ const UserRow = ({ user }: { user: IUser }) => {
           <Indicator label={`${user.role}`} size={16} color="orange">
             <Avatar size="xl" variant="filled" radius="md" src={user.image ?? ''} />
           </Indicator>
-          <Stack>
-            <Text fw={600}>{user.username}</Text>
-            <Text>{user.department}</Text>
-          </Stack>
+          <Link href={`/users/${user.id}?name=${user.username}`}>
+            <Stack>
+              <Text fw={600}>{user.username}</Text>
+              <Text>{user.department}</Text>
+            </Stack>
+          </Link>
         </Group>
 
         <Menu trigger="click" withinPortal position="bottom-end" shadow="md">
@@ -49,7 +73,7 @@ const UserRow = ({ user }: { user: IUser }) => {
               Edit
             </Menu.Item>
             <Menu.Item
-              // onClick={deleteProduct}
+              onClick={deleteUser}
               leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
               color="red"
             >
@@ -78,6 +102,7 @@ const UserRow = ({ user }: { user: IUser }) => {
         />
       </Modal>
     </div>
+    // </Link>
   )
 }
 

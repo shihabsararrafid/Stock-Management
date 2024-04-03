@@ -14,7 +14,7 @@ import AddItemForm from './AddItemDrwaer'
 import classes from './HeaderMenu.module.css'
 
 const links = [
-  { link: '/about', label: 'View/Restock', icon: <GoFileDirectory size={20} /> },
+  { link: '/', label: 'View/Restock', icon: <GoFileDirectory size={20} /> },
   { link: '/learn', label: 'Borrower', icon: <TbUserSquare size={20} /> },
   { link: '/users', label: 'Users', icon: <LuUsers size={20} /> },
 ]
@@ -33,7 +33,7 @@ export function Header() {
       className={classes.link}
       data-active={active === link.link || undefined}
       onClick={(event) => {
-        event.preventDefault()
+        // event.preventDefault()
         setActive(link.link)
       }}
     >

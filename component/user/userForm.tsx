@@ -61,7 +61,7 @@ export default function UserCreateForm({
               },
             })
             if (res.ok) {
-              await Swal.fire('Success', 'Product Added', 'success')
+              await Swal.fire('Success', 'User Updated', 'success')
               setKey(key + 1)
               mutate('/api/user')
               close()
