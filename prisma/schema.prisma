@@ -22,6 +22,7 @@ model user {
   email      String? @unique
   password   String  
   image      String?
+  department String?
   borrowList borrowList[]
   role       role   @default(user)
   @@index([id])

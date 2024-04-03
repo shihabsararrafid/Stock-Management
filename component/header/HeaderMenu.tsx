@@ -16,7 +16,7 @@ import classes from './HeaderMenu.module.css'
 const links = [
   { link: '/about', label: 'View/Restock', icon: <GoFileDirectory size={20} /> },
   { link: '/learn', label: 'Borrower', icon: <TbUserSquare size={20} /> },
-  { link: '/pricing', label: 'Users', icon: <LuUsers size={20} /> },
+  { link: '/users', label: 'Users', icon: <LuUsers size={20} /> },
 ]
 
 export function Header() {
@@ -27,7 +27,7 @@ export function Header() {
   const route = useRouter()
   const pathName = usePathname()
   const items = links.map((link) => (
-    <a
+    <Link
       key={link.label}
       href={link.link}
       className={classes.link}
@@ -38,7 +38,7 @@ export function Header() {
       }}
     >
       {link.icon} {link.label}
-    </a>
+    </Link>
   ))
   const handleLogout = async () => {
     setLoading(true)

@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { zfd } from 'zod-form-data'
 export const deviceCreateSchema = z
   .object({
     name: z.string().optional(),
@@ -13,16 +12,11 @@ export const projectCreateSchema = z
     description: z.string().optional(),
   })
   .strict()
-export enum updateType {
-  firmware = 'firmware',
-  fileSystem = 'fileSystem',
+export enum role {
+  user = 'user',
+  admin = 'admin',
 }
-export const fileUploadSchema = zfd.formData({
-  updateType: z.string(z.enum([updateType.fileSystem, updateType.firmware])),
 
-  // deviceId
-  file: zfd.file(),
-})
 export const loginSchema = z.object({
   username: z.string(),
   password: z.string(),
@@ -42,3 +36,10 @@ export const productUpdateSchema = z.object({
   stock: z.number().optional(),
   photoUrl: z.string().optional(),
 })
+export const userInfoUpdateSchema = z
+  .object({
+    image: z.string().optional(),
+    role: z.enum([role.user, role.admin]).optional(),
+    department: z.string().optional(),
+  })
+  .strict()
