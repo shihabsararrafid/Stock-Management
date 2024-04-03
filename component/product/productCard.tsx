@@ -1,8 +1,33 @@
 import { IProduct } from '@/app/hooks/useProductHook'
-import { ActionIcon, Card, Group, Image, Menu, Text, rem } from '@mantine/core'
+import { ActionIcon, Card, Group, Image, Menu, Modal, Text, rem } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import { IconDots, IconPencil, IconTrash } from '@tabler/icons-react'
+import Swal from 'sweetalert2'
+import { useSWRConfig } from 'swr'
+import AddItemForm from '../header/AddItemDrwaer'
 
 export default function ProductCard({ product }: { product: IProduct }) {
+  const { mutate } = useSWRConfig()
+  const [openedModal, { open, close }] = useDisclosure(false)
+  const deleteProduct = async () => {
+    try {
+      const res = await fetch(`/api/product/${product.id}`, {
+        method: 'DELETE',
+      })
+      if (res.ok) {
+        await Swal.fire('Success', 'Product Deleted', 'success')
+
+        mutate('/api/product')
+      } else {
+        const data = await res.json()
+
+        throw new Error(data instanceof Error ? data.message : 'Invalid Server Response')
+      }
+    } catch (error) {
+      await Swal.fire('Error', 'Invalid Server Response', 'error')
+    } finally {
+    }
+  }
   return (
     <Card bg="#EAEAEA" withBorder shadow="sm" radius="md">
       <Card.Section bg="white" style={{ position: 'relative', padding: 5, height: '100%' }} mt="sm">
@@ -15,10 +40,14 @@ export default function ProductCard({ product }: { product: IProduct }) {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item leftSection={<IconPencil style={{ width: rem(14), height: rem(14) }} />}>
+              <Menu.Item
+                onClick={open}
+                leftSection={<IconPencil style={{ width: rem(14), height: rem(14) }} />}
+              >
                 Edit
               </Menu.Item>
               <Menu.Item
+                onClick={deleteProduct}
                 leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
                 color="red"
               >
@@ -37,6 +66,20 @@ export default function ProductCard({ product }: { product: IProduct }) {
         {product.name}
       </Text>{' '}
       <Text>{product.stock}</Text>
+      <Modal
+        centered
+        size="xl"
+        styles={{ root: { height: '600px' } }}
+        opened={openedModal}
+        onClose={close}
+      >
+        <AddItemForm
+          url={`/api/product/${product.id}`}
+          method="PATCH"
+          initialValues={product}
+          close={close}
+        />
+      </Modal>
     </Card>
   )
 }

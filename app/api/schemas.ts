@@ -37,3 +37,8 @@ export const productUploadSchema = z.object({
   stock: z.number(),
   photoUrl: z.string(),
 })
+export const productUpdateSchema = z.object({
+  name: z.string().optional(),
+  stock: z.number().optional(),
+  photoUrl: z.string().optional(),
+})

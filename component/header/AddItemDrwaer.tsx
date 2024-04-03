@@ -1,4 +1,4 @@
-import { Box, Button, FileInput, Group, Loader, NumberInput, TextInput } from '@mantine/core'
+import { Box, Button, FileInput, Group, Loader, NumberInput, Space, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { PutBlobResult } from '@vercel/blob'
 import { useState } from 'react'
@@ -6,13 +6,27 @@ import { FaRegFileImage } from 'react-icons/fa'
 import Swal from 'sweetalert2'
 import { useSWRConfig } from 'swr'
 
-export default function AddItemForm({ close }: { close: () => void }) {
+export default function AddItemForm({
+  close,
+  initialValues,
+  url,
+  method,
+}: {
+  close: () => void
+  initialValues?: { name: string; photoUrl: string; stock: number }
+  url?: string
+  method?: string
+}) {
   const [isImageUploading, setImageUploading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [key, setKey] = useState(1000)
   const { mutate } = useSWRConfig()
   const form = useForm({
-    initialValues: { name: '', photoUrl: '', stock: 0 },
+    initialValues: {
+      name: initialValues?.name ?? '',
+      photoUrl: initialValues?.photoUrl ?? '',
+      stock: initialValues?.stock ?? 0,
+    },
     validate: {
       name: (value) => (value.length < 2 ? 'Name must have at least 2 letters' : null),
       photoUrl: (value) => (!value ? 'Image is required' : null),
@@ -30,8 +44,8 @@ export default function AddItemForm({ close }: { close: () => void }) {
           }
           setLoading(true)
           try {
-            const res = await fetch('/api/product', {
-              method: 'POST',
+            const res = await fetch(url ? url : '/api/product', {
+              method: method ? method : 'POST',
               body: JSON.stringify(form.values),
               headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +55,7 @@ export default function AddItemForm({ close }: { close: () => void }) {
               await Swal.fire('Success', 'Product Added', 'success')
               setKey(key + 1)
               mutate('/api/product')
-              form.reset()
+              !url ?? form.reset()
             } else {
               const data = await res.json()
               console.log(data, 'data')
@@ -98,6 +112,7 @@ export default function AddItemForm({ close }: { close: () => void }) {
             }
           }}
           clearable
+          // value={initialValues?.photoUrl}
           name="photoUrl"
           leftSection={<FaRegFileImage size={20} />}
           rightSection={isImageUploading ? <Loader size={20} /> : undefined}
@@ -109,6 +124,7 @@ export default function AddItemForm({ close }: { close: () => void }) {
           required
           leftSectionPointerEvents="none"
         />
+        <Space h={200} />
         <Group style={{ position: 'absolute', bottom: 15 }}>
           <Button
             disabled={form.values.photoUrl.length === 0}
