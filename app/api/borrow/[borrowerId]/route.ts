@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
-import { productUpdateSchema } from '../../schemas'
+import { borrowerUpdateSchema } from '../../schemas'
 
 export async function GET(
   request: NextRequest,
@@ -51,15 +51,32 @@ export async function PATCH(
 ) {
   try {
     const sessionData = await new Response(request.body).json()
-    const data = productUpdateSchema.parse(sessionData)
-    const device = await prisma?.product.update({
+    const data = borrowerUpdateSchema.parse(sessionData)
+    const product = await prisma?.borrowList.findUnique({
+      where: { id: params.borrowerId },
+    })
+    const device = await prisma?.borrowList.update({
       where: {
         id: params.borrowerId,
       },
       data: data,
     })
+    console.log(data.value, product?.value)
+    if (data.value && data.value !== product?.value) {
+      console.log('here')
+      const res = await prisma?.product.update({
+        where: {
+          id: product?.productId,
+        },
+        data: {
+          stock: {
+            increment: (product?.value || 0) - data.value,
+          },
+        },
+      })
+    }
     return NextResponse.json(
-      { success: true, message: 'Updated Device Device List', data: device },
+      { success: true, message: 'Updated Borrow List', data: device },
       { status: 200 },
     )
   } catch (error) {

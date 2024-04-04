@@ -32,7 +32,7 @@ export function Header() {
       key={link.label}
       href={link.link}
       className={classes.link}
-      data-active={active === link.link || undefined}
+      data-active={pathName === link.link || undefined}
       onClick={(event) => {
         // event.preventDefault()
         setActive(link.link)
@@ -84,10 +84,10 @@ export function Header() {
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
         </Group>
       </Container>
-      {!pathName.startsWith('/products') && (
+      {links.find((link) => link.link === pathName) && (
         <Group mt={30} className="w-[80%]" justify="space-evenly">
           <Text c="white" size="xl" fw={600}>
-            View/Restock
+            {links.find((link) => link.link === pathName)?.label}
           </Text>
           <Group>
             <TextInput

@@ -58,10 +58,17 @@ export default function AddBorrower({
               },
             })
             if (res.ok) {
-              await Swal.fire('Success', 'Borrower Added', 'success')
+              await Swal.fire(
+                'Success',
+                initialValues?.productId ? 'Updated' : 'Borrower Added',
+                'success',
+              )
               setKey(key + 1)
               mutate('/api/product')
               mutate('/api/borrow')
+              if (initialValues?.productId) {
+                mutate(`/api/borrow/${initialValues.userId}`)
+              }
               close()
               //   mutate()
               !url ?? form.reset()
@@ -83,6 +90,7 @@ export default function AddBorrower({
           label="Select Product"
           description=" "
           searchable
+          disabled={initialValues?.productId ? true : false}
           variant="filled"
           placeholder="Select Product Name"
           required
@@ -112,6 +120,7 @@ export default function AddBorrower({
           mt="lg"
           description=" "
           searchable
+          disabled={initialValues?.userId ? true : false}
           variant="filled"
           required
           placeholder="Select User Name"
