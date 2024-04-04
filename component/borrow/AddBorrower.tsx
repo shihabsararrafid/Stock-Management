@@ -61,6 +61,7 @@ export default function AddBorrower({
               await Swal.fire('Success', 'Borrower Added', 'success')
               setKey(key + 1)
               mutate('/api/product')
+              mutate('/api/borrow')
               close()
               //   mutate()
               !url ?? form.reset()

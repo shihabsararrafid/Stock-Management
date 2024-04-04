@@ -33,9 +33,38 @@ export async function POST(req: NextRequest, res: NextResponse) {
 }
 export async function GET(req: NextRequest, res: NextResponse) {
   try {
-    const products = await prisma.borrowList.findMany({ where: {} })
+    const groupedBorrowLists = await prisma.borrowList.findMany({
+      where: {},
+      select: {
+        userId: true,
+        user: {
+          select: {
+            password: false,
+            id: true,
+            username: true,
+            image: true,
+            department: true,
+            role: true,
+          },
+        },
+        product: true,
+        value: true,
+      },
+    })
+    const borrowLists: { [key: string]: any[] } = {} // Define the type of borrowLists
+
+    const groupedByUserId = groupedBorrowLists.reduce((acc, borrowList) => {
+      const userId = borrowList.userId
+      if (!acc[userId]) {
+        acc[userId] = []
+      }
+      acc[userId].push(borrowList)
+      return acc
+    }, borrowLists)
+
+    console.log(borrowLists)
     return NextResponse.json(
-      { success: true, message: 'Borrower Lists', products },
+      { success: true, message: 'Borrower Lists', borrowLists },
       { status: 200 },
     )
   } catch (error) {
