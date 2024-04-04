@@ -10,12 +10,13 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal from 'sweetalert2'
+import AddBorrower from '../borrow/AddBorrower'
 import AddItemForm from './AddItemDrwaer'
 import classes from './HeaderMenu.module.css'
 
 const links = [
   { link: '/', label: 'View/Restock', icon: <GoFileDirectory size={20} /> },
-  { link: '/learn', label: 'Borrower', icon: <TbUserSquare size={20} /> },
+  { link: '/borrowers', label: 'Borrower', icon: <TbUserSquare size={20} /> },
   { link: '/users', label: 'Users', icon: <LuUsers size={20} /> },
 ]
 
@@ -117,9 +118,13 @@ export function Header() {
         // title="Authentication"
       >
         <h1 style={{ textAlign: 'center', fontWeight: 600 }} className="text-center font-semibold">
-          Add Item
+          {pathName.startsWith('/borrowers') ? 'Add Borrower' : 'Add Item'}
         </h1>
-        <AddItemForm close={close} />
+        {pathName.startsWith('/borrowers') ? (
+          <AddBorrower close={close} />
+        ) : (
+          <AddItemForm close={close} />
+        )}
         {/* Drawer content */}
       </Drawer>
     </header>

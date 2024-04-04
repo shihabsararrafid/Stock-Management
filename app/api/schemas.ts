@@ -43,3 +43,19 @@ export const userInfoUpdateSchema = z
     department: z.string().optional(),
   })
   .strict()
+export const borrowerCreateSchema = z
+  .object({
+    userId: z.string(),
+    productId: z.string(),
+    value: z.number(),
+    createdAt: z.string().datetime().optional(),
+  })
+  .strict()
+export const borrowerUpdateSchema = z
+  .object({
+    userId: z.string().optional(),
+    productId: z.string().optional(),
+    value: z.number().optional(),
+    createdAt: z.string().datetime().optional(),
+  })
+  .strict()

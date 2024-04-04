@@ -13,6 +13,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const user = await prisma.user.findUnique({ where: { username: data.username } })
     if (user) {
       const { password, image, ...others } = user
+      console.log(data,user);
+
       const check = await bcrypt.compare(data.password, user.password)
       if (!check) throw new Error('Unauthorized')
       const encryptedSessionData = await signToken(others)

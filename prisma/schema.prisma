@@ -42,5 +42,6 @@ model borrowList {
   value Int
   productId  String
   product product @relation(fields: [productId],references: [id],onDelete: Cascade)
+  createdAt DateTime @default(now())
   @@index([id,userId])
 }
