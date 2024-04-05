@@ -11,7 +11,14 @@ const Auth = ({ children }: { children: ReactNode }) => {
         const response = await fetch('/api/auth/verify', {
           credentials: 'include',
         })
+
         if (!response.ok) throw new Error('Invalid User')
+        else {
+          const res = await response.json()
+          sessionStorage.setItem('userId', (res as any)?.data?.id)
+          sessionStorage.setItem('role', (res as any)?.data?.role)
+          console.log(res, 'patload data')
+        }
       } catch (error) {
         if (!pathName.startsWith('/auth')) route.push('/auth/login')
       }

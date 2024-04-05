@@ -15,7 +15,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     if (payload instanceof Error) {
       return NextResponse.json({ message: payload.message }, { status: 401 })
       // console.log('error occurred')
-    } else return NextResponse.json({ message: 'Verified User' }, { status: 200 })
+    } else return NextResponse.json({ message: 'Verified User', data: payload }, { status: 200 })
   } catch (error) {
     return NextResponse.json({ message: 'Invalid Server Response' }, { status: 500 })
   }

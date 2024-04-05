@@ -47,6 +47,9 @@
     "zod": "^3.22.4",
     "zod-form-data": "^2.0.2"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",

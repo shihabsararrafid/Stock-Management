@@ -52,6 +52,11 @@ export function LoginForm() {
             })
             if (res.ok) {
               await Swal.fire('Success', 'User Login', 'success')
+              const r = await res.json()
+              if (r) {
+                sessionStorage.setItem('userId', (r as any).data.id)
+                sessionStorage.setItem('role', (r as any).data.role)
+              }
               router.push('/')
             } else {
               const data = await res.json()

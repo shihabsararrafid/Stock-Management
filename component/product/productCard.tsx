@@ -3,6 +3,7 @@ import { ActionIcon, Box, Card, Group, Image, Menu, Modal, Text, rem } from '@ma
 import { useDisclosure } from '@mantine/hooks'
 import { IconDots, IconPencil, IconTrash } from '@tabler/icons-react'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { useSWRConfig } from 'swr'
 import AddItemForm from '../header/AddItemDrwaer'
@@ -10,6 +11,7 @@ import AddItemForm from '../header/AddItemDrwaer'
 export default function ProductCard({ product }: { product: IProduct }) {
   const { mutate } = useSWRConfig()
   const [openedModal, { open, close }] = useDisclosure(false)
+  const [role, setRole] = useState('user')
   const deleteProduct = async () => {
     try {
       const res = await fetch(`/api/product/${product.id}`, {
@@ -29,16 +31,22 @@ export default function ProductCard({ product }: { product: IProduct }) {
     } finally {
     }
   }
+  useEffect(() => {
+    const role = sessionStorage.getItem('role')
+    role && setRole(role)
+  }, [])
   return (
     <Card bg="#EAEAEA" withBorder shadow="sm" radius="md">
       <Card.Section bg="white" style={{ position: 'relative', padding: 5, height: '100%' }} mt="sm">
         <Group style={{ position: 'absolute', right: 0 }} justify="end">
           <Menu trigger="hover" withinPortal position="bottom-end" shadow="md">
-            <Menu.Target>
-              <ActionIcon color="#A5A6A5">
-                <IconDots style={{ width: rem(16), height: rem(16) }} />
-              </ActionIcon>
-            </Menu.Target>
+            {role === 'admin' && (
+              <Menu.Target>
+                <ActionIcon color="#A5A6A5">
+                  <IconDots style={{ width: rem(16), height: rem(16) }} />
+                </ActionIcon>
+              </Menu.Target>
+            )}
 
             <Menu.Dropdown>
               <Menu.Item
@@ -63,7 +71,14 @@ export default function ProductCard({ product }: { product: IProduct }) {
           alt={`${product.name} Image`}
         />
       </Card.Section>
-      <Box component={Link} href={`/products/${product.id}?name=${product.name}`}>
+      <Box
+        component={Link}
+        href={
+          role === 'user'
+            ? `/products/borrow/${product.id}?name=${product.name}`
+            : `/products/${product.id}?name=${product.name}`
+        }
+      >
         <Text span fw={700} inherit c="black">
           {product.name}
         </Text>{' '}

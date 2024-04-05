@@ -2,7 +2,7 @@
 import { useProduct } from '@/app/hooks/useProductHook'
 import LoaderComponent from '@/component/Loader/LoaderComponent'
 import AddItemForm from '@/component/header/AddItemDrwaer'
-import { Anchor, Breadcrumbs, Button, Group, Image, Modal, Text } from '@mantine/core'
+import { Anchor, Avatar, Breadcrumbs, Button, Group, Modal, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconPencil } from '@tabler/icons-react'
 import Link from 'next/link'
@@ -34,8 +34,10 @@ const ProductDetailsPage = ({ params }: { params: { productId: string } }) => {
       <Breadcrumbs separator=">">{items}</Breadcrumbs>
       <section className="mt-4">
         <Group align="start">
-          <Image
-            style={{ width: '300px', height: '250px', borderRadius: 10, border: '1px solid black' }}
+          <Avatar
+            variant="filled"
+            size={300}
+            style={{ borderRadius: 10, border: '1px solid black' }}
             src={product?.photoUrl}
             alt={`${product?.name} Image`}
           />

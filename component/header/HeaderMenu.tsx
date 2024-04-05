@@ -8,7 +8,7 @@ import { TbUserSquare } from 'react-icons/tb'
 // import { MantineLogo } from '@mantinex/mantine-logo'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import AddBorrower from '../borrow/AddBorrower'
 import AddItemForm from './AddItemDrwaer'
@@ -19,6 +19,10 @@ const links = [
   { link: '/borrowers', label: 'Borrower', icon: <TbUserSquare size={20} /> },
   { link: '/users', label: 'Users', icon: <LuUsers size={20} /> },
 ]
+const linkUser = [
+  { link: '/', label: 'Item', icon: <GoFileDirectory size={20} /> },
+  { link: '/profile', label: 'User', icon: <LuUsers size={20} /> },
+]
 
 export function Header() {
   const [opened, { toggle }] = useDisclosure(false)
@@ -27,7 +31,14 @@ export function Header() {
   const [isLoading, setLoading] = useState(false)
   const route = useRouter()
   const pathName = usePathname()
-  const items = links.map((link) => (
+  const [role, setRole] = useState<string | null>(null)
+  useEffect(() => {
+    const role = window && sessionStorage.getItem('role')
+    console.log(role)
+
+    setRole(role ? role : 'user')
+  }, [])
+  const items = (role && role === 'admin' ? links : linkUser).map((link) => (
     <Link
       key={link.label}
       href={link.link}
@@ -54,6 +65,8 @@ export function Header() {
       })
       if (res.ok) {
         await Swal.fire('Success', 'Log Out Successfully', 'success')
+        sessionStorage.removeItem('role')
+        sessionStorage.removeItem('userId')
         route.push('/auth/login')
       } else throw new Error('Invalid Server Response')
     } catch (error) {
@@ -87,7 +100,7 @@ export function Header() {
       {links.find((link) => link.link === pathName) && (
         <Group mt={30} className="w-[80%]" justify="space-evenly">
           <Text c="white" size="xl" fw={600}>
-            {links.find((link) => link.link === pathName)?.label}
+            {(role === 'admin' ? links : linkUser).find((link) => link.link === pathName)?.label}
           </Text>
           <Group>
             <TextInput
@@ -98,15 +111,17 @@ export function Header() {
               leftSection={<IoSearch color="white" />}
               placeholder="Search"
             />
-            <Button
-              onClick={open}
-              radius="md"
-              leftSection={<GoPlus size={20} />}
-              bg="white"
-              c="#CF5C2D"
-            >
-              Add
-            </Button>
+            {role === 'admin' && (
+              <Button
+                onClick={open}
+                radius="md"
+                leftSection={<GoPlus size={20} />}
+                bg="white"
+                c="#CF5C2D"
+              >
+                Add
+              </Button>
+            )}
           </Group>
         </Group>
       )}

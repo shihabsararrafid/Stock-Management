@@ -13,7 +13,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const user = await prisma.user.findUnique({ where: { username: data.username } })
     if (user) {
       const { password, image, ...others } = user
-      console.log(data,user);
+      console.log(data, user)
 
       const check = await bcrypt.compare(data.password, user.password)
       if (!check) throw new Error('Unauthorized')
@@ -25,8 +25,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
         maxAge: 60 * 60 * 24 * 7, // One week
         path: '/',
       })
+      // const {password,...others}=user
       return NextResponse.json(
-        { success: true, data: 'Login' },
+        { success: true, data: others },
         { status: 200, headers: { 'Set-Cookie': `${cookie}` } },
       ) // Using NextResponse
     } else throw new Error('Unauthorized')

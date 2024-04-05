@@ -47,11 +47,21 @@ export async function middleware(req: NextRequest) {
     // if (pathname.startsWith('/api/admin')) {
     //   return NextResponse.redirect(new URL('/api/auth/unauthorized', req.url))
     // }
-
-    return NextResponse.next()
+    const requestHeaders = new Headers(req.headers)
+    requestHeaders.set('userId', payload.id)
+    requestHeaders.set('role', payload.role)
+    // console.log(requestHeaders)
+    // And the middleware expects a response object as a return so we need to involve that as well.
+    const response = NextResponse.next({
+      request: {
+        // New request headers
+        headers: requestHeaders,
+      },
+    })
+    return response
   }
 }
 
-export const config = {
-  matcher: ['/api/device/:path*', '/api/project/:path*'],
-}
+// export const config = {
+//   matcher: ['/api/device/:path*', '/api/project/:path*'],
+// }
