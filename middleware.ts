@@ -34,7 +34,7 @@ export async function middleware(req: NextRequest) {
   //   return NextResponse.next()
   if (
     req.nextUrl.pathname.startsWith('/api/auth') &&
-    !['/api/auth/profile', '/api/auth/verify'].includes(req.nextUrl.pathname)
+    !['/api/auth/profile'].includes(req.nextUrl.pathname)
   ) {
     return NextResponse.next()
   } else {
