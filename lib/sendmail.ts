@@ -55,11 +55,11 @@ export const sendForgotPasswordMail = async (username: string, link: string, ema
     },
     function (error, info) {
       if (error) {
+        console.log(error)
         throw new Error('Error Occurred')
-        // console.log(error)
       } else {
+        console.log('Email sent: ' + info.response)
         return true
-        // console.log('Email sent: ' + info.response)
         // do something useful
       }
     },
