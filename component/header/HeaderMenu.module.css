@@ -46,3 +46,27 @@
     border: 1px solid white;
   }
 }
+.linkSmall {
+  display: flex;
+
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  line-height: 1;
+  padding: rem(8px) rem(12px);
+  border-radius: var(--mantine-radius-sm);
+  text-decoration: none;
+  color: black;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
+
+  @mixin hover {
+    background-color: #dc6839;
+  }
+
+  [data-mantine-color-scheme] &[data-active] {
+    color: #dc6839;
+  }
+}

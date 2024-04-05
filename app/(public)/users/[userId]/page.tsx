@@ -70,7 +70,7 @@ const UserDetailPage = ({ params }: { params: { userId: string } }) => {
       <Modal
         centered
         size="xl"
-        styles={{ root: { height: '600px' } }}
+        styles={{ root: { height: openedModal ? '600px' : 0 } }}
         opened={openedModal}
         onClose={() => {
           close()

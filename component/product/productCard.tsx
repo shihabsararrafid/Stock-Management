@@ -87,7 +87,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
       <Modal
         centered
         size="xl"
-        styles={{ root: { height: '600px' } }}
+        styles={{ root: { height: openedModal ? '600px' : 0 } }}
         opened={openedModal}
         onClose={close}
       >
