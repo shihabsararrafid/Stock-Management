@@ -47,7 +47,7 @@ const BorrowersDetailPage = ({ params }: { params: { borrowerId: string } }) => 
 
 export default BorrowersDetailPage
 
-export const TableRow = ({
+const TableRow = ({
   borrow,
 }: {
   borrow: {
