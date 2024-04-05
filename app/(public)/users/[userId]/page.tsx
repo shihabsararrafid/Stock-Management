@@ -2,7 +2,7 @@
 import { useUser } from '@/app/hooks/useUserHook'
 import LoaderComponent from '@/component/Loader/LoaderComponent'
 import UserCreateForm from '@/component/user/userForm'
-import { Anchor, Breadcrumbs, Button, Group, Image, Modal, Text } from '@mantine/core'
+import { Anchor, Avatar, Breadcrumbs, Button, Group, Modal, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconPencil } from '@tabler/icons-react'
 import Link from 'next/link'
@@ -34,11 +34,17 @@ const UserDetailPage = ({ params }: { params: { userId: string } }) => {
       <Breadcrumbs separator=">">{items}</Breadcrumbs>
       <section className="mt-4">
         <Group align="start">
-          <Image
+          <Avatar
+            variant="filled"
+            size={200}
+            src={user?.image || ''}
+            alt={`${user?.username} Image`}
+          />
+          {/* <Image
             style={{ width: '300px', height: '250px', borderRadius: 10, border: '1px solid black' }}
             src={user?.image}
             alt={`${user?.username} Image`}
-          />
+          /> */}
           <div
             style={{
               height: '250px',

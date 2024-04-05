@@ -3,6 +3,7 @@ import { IUser, useUsers } from '@/app/hooks/useUserHook'
 import LoaderComponent from '@/component/Loader/LoaderComponent'
 import UserRow from '@/component/user/userRow'
 import { FuseSearch } from '@/lib/fuseSearch'
+import { Text } from '@mantine/core'
 import { useEffect, useState } from 'react'
 
 const AllUserPage = () => {
@@ -39,6 +40,11 @@ const AllUserPage = () => {
   return (
     <div className="mx-auto w-[70%]">
       {searchItems?.map((user) => <UserRow user={user} key={user.id} />)}
+      {searchItems?.length === 0 && (
+        <Text ta="center" size="lg">
+          No User is Found
+        </Text>
+      )}
     </div>
   )
 }

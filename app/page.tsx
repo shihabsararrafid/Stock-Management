@@ -2,6 +2,7 @@
 import LoaderComponent from '@/component/Loader/LoaderComponent'
 import ProductCard from '@/component/product/productCard'
 import { FuseSearch } from '@/lib/fuseSearch'
+import { Text } from '@mantine/core'
 import { useEffect, useState } from 'react'
 import { IProduct, useProducts } from './hooks/useProductHook'
 const Homepage = () => {
@@ -50,6 +51,11 @@ const Homepage = () => {
           {searchItems?.map((d) => <ProductCard product={d} key={d.id} />)}
         </div>
       </section>
+      {searchItems?.length === 0 && (
+        <Text ta="center" size="lg">
+          No Item is Found
+        </Text>
+      )}
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { IBorrow, useBorrowLists } from '@/app/hooks/useBorrowLists'
 import LoaderComponent from '@/component/Loader/LoaderComponent'
 import BorrowListRow from '@/component/borrow/borrowListRow'
 import { FuseSearch } from '@/lib/fuseSearch'
+import { Text } from '@mantine/core'
 import { useEffect, useState } from 'react'
 
 const BorrowerPage = () => {
@@ -66,6 +67,11 @@ const BorrowerPage = () => {
             key={key}
           />
         ))}
+      {searchItems && Object.keys(searchItems)?.length === 0 && (
+        <Text ta="center" size="lg">
+          No Borrower is Found
+        </Text>
+      )}
     </div>
   )
 }

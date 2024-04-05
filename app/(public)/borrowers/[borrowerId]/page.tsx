@@ -7,9 +7,9 @@ import AddBorrower from '@/component/borrow/AddBorrower'
 import {
   ActionIcon,
   Anchor,
+  Avatar,
   Breadcrumbs,
   Group,
-  Image,
   Modal,
   Table,
   Text,
@@ -68,11 +68,13 @@ const BorrowersDetailPage = ({ params }: { params: { borrowerId: string } }) => 
       <Breadcrumbs separator=">">{items}</Breadcrumbs>
       <section className="mt-4">
         <Group align="start">
-          <Image
-            style={{ width: '300px', height: '250px', borderRadius: 10, border: '1px solid black' }}
+          <Avatar
+            variant="filled"
+            size={200}
             src={borrows?.[0].user.image || ''}
             alt={`${borrows?.[0].user?.username} Image`}
           />
+
           <div
             style={{
               height: '250px',
