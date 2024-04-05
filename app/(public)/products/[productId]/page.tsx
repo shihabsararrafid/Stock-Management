@@ -28,6 +28,7 @@ const ProductDetailsPage = ({ params }: { params: { productId: string } }) => {
   const { product, isLoading } = useProduct(params.productId)
   const { mutate } = useSWRConfig()
   const [openedModal, { open, close }] = useDisclosure(false)
+
   if (isLoading) return <LoaderComponent />
   return (
     <div className="mx-auto mt-10 w-[90%] lg:w-[70%]">

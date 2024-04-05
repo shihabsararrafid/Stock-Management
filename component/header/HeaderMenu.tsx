@@ -104,6 +104,12 @@ export function Header() {
           </Text>
           <Group>
             <TextInput
+              onChange={(e) => {
+                if (window) {
+                  window.sessionStorage.setItem('search', e.target.value)
+                  window.dispatchEvent(new Event('storage'))
+                }
+              }}
               styles={{ root: { color: 'white' } }}
               classNames={classes}
               variant="filled"

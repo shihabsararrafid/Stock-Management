@@ -21,15 +21,20 @@ const publicUrl = [
 ]
 export async function middleware(req: NextRequest) {
   console.log(!req.nextUrl.searchParams.get('filesInclude'))
+  // if (
+  //   publicUrl.some(
+  //     (entry) =>
+  //       entry.regex.test(req.nextUrl.pathname) &&
+  //       req.method === entry.method &&
+  //       (entry.param && entry.paramValue
+  //         ? req.nextUrl.searchParams.get(entry.param) === entry.paramValue
+  //         : true),
+  //   )
+  // ) {
+  //   return NextResponse.next()
   if (
-    publicUrl.some(
-      (entry) =>
-        entry.regex.test(req.nextUrl.pathname) &&
-        req.method === entry.method &&
-        (entry.param && entry.paramValue
-          ? req.nextUrl.searchParams.get(entry.param) === entry.paramValue
-          : true),
-    )
+    req.nextUrl.pathname.startsWith('/api/auth') &&
+    !['/api/auth/profile', '/api/auth/verify'].includes(req.nextUrl.pathname)
   ) {
     return NextResponse.next()
   } else {
@@ -62,6 +67,6 @@ export async function middleware(req: NextRequest) {
   }
 }
 
-// export const config = {
-//   matcher: ['/api/device/:path*', '/api/project/:path*'],
-// }
+export const config = {
+  matcher: ['/api/:path*'],
+}

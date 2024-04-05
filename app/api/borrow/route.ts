@@ -54,7 +54,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const borrowLists: { [key: string]: any[] } = {} // Define the type of borrowLists
 
     const groupedByUserId = groupedBorrowLists.reduce((acc, borrowList) => {
-      const userId = borrowList.userId
+      const userId = borrowList.user.username
       if (!acc[userId]) {
         acc[userId] = []
       }
