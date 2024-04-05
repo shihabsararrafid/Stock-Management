@@ -63,7 +63,7 @@ const BorrowerPage = () => {
         Object.keys(searchItems).map((key) => (
           <BorrowListRow
             user={searchItems[key][0]?.user}
-            products={searchItems[key].map((l) => l.product)}
+            products={searchItems[key]?.map((l) => l?.product)}
             key={key}
           />
         ))}

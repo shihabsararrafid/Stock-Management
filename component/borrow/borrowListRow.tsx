@@ -8,12 +8,12 @@ const BorrowListRow = ({ user, products }: { user: IUser; products: IProduct[] }
     <div className="cursor-pointer hover:bg-gray-200">
       <Group my={10} justify="space-between">
         <Group>
-          <Indicator label={`${user.role}`} size={16} color="orange">
-            <Avatar size="xl" variant="filled" radius="md" src={user.image ?? ''} />
+          <Indicator label={`${user?.role}`} size={16} color="orange">
+            <Avatar size="xl" variant="filled" radius="md" src={user?.image ?? ''} />
           </Indicator>
-          <Link href={`/borrowers/${user.id}?name=${user.username}`}>
+          <Link href={`/borrowers/${user?.id}?name=${user?.username}`}>
             <Stack>
-              <Text fw={600}>{user.username}</Text>
+              <Text fw={600}>{user?.username}</Text>
               <div>
                 {products
                   .filter(

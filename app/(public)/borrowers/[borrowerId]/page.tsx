@@ -71,8 +71,8 @@ const BorrowersDetailPage = ({ params }: { params: { borrowerId: string } }) => 
           <Avatar
             variant="filled"
             size={200}
-            src={borrows?.[0].user.image || ''}
-            alt={`${borrows?.[0].user?.username} Image`}
+            src={borrows?.[0]?.user?.image || ''}
+            alt={`${borrows?.[0]?.user?.username} Image`}
           />
 
           <div
@@ -84,14 +84,14 @@ const BorrowersDetailPage = ({ params }: { params: { borrowerId: string } }) => 
             }}
           >
             <Text styles={{ root: { fontSize: 36 } }} size="xl" fw={700}>
-              {borrows?.[0].user?.username}
+              {borrows?.[0]?.user?.username}
             </Text>
           </div>
         </Group>
       </section>
       <div className="mt-5">
         <Text c="dimmed">Email</Text>
-        <Text>{borrows?.[0].user?.email}</Text>
+        <Text>{borrows?.[0]?.user?.email}</Text>
       </div>
       <div className="w-full lg:w-1/2">
         <Table>
