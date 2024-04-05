@@ -1,5 +1,5 @@
 'use client'
-import { Button, Container, Drawer, Group, Text, TextInput } from '@mantine/core'
+import { Burger, Button, Container, Drawer, Group, Text, TextInput } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { GoFileDirectory, GoPlus } from 'react-icons/go'
 import { IoSearch } from 'react-icons/io5'
@@ -94,6 +94,7 @@ export function Header() {
           <Button loading={isLoading} onClick={handleLogout} bg="white" c="black">
             Log Out
           </Button>
+          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
         </Group>
       </Container>
       {links.find((link) => link.link === pathName) && (

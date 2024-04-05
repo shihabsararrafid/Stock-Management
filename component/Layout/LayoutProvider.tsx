@@ -17,7 +17,8 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
           <Auth>{children}</Auth>
         </main>
       </div>
-      <BottomNavigation />
+      {!pathname.startsWith('/auth') && <BottomNavigation />}
+
       {/* {children} */}
     </>
   )
